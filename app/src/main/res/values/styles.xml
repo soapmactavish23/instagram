@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- Base application theme. Main -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Login -->
+    <style name="AppThemeLogin" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/roxo</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+</resources>
