@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -50,8 +51,9 @@ public class PerfilAmigoActivity extends AppCompatActivity {
     private DatabaseReference usuariosLogadoRef;
     private DatabaseReference seguidoresRef;
     private DatabaseReference postagensUsuarioRef;
-
     private String idUsuarioLogado;
+
+    private List<Postagem> listaPostagens;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +77,11 @@ public class PerfilAmigoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Postagem postagem =
-
+                Postagem postagem = listaPostagens.get(position);
+                Intent i = new Intent(getApplicationContext(), VisualizarPostagemActivity.class);
+                i.putExtra("postagem", postagem);
+                i.putExtra("usuarioSelecionado", usuarioPerfil);
+                startActivity(i);
             }
         });
 
@@ -121,6 +126,13 @@ public class PerfilAmigoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(usuarioPerfil.getNome());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_fechar_preto);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return false;
     }
 
     public void inicializarImageLoader(){
@@ -136,6 +148,10 @@ public class PerfilAmigoActivity extends AppCompatActivity {
     }
 
     public void carregarFotosPostagem(){
+        //Recupera fotos postadas
+        listaPostagens = new ArrayList<>();
+
+
         //Configurar o tamanho do grid
         int tamanhoGrid = getResources().getDisplayMetrics().widthPixels;
         int tamanhoImagem = tamanhoGrid / 3;
@@ -148,6 +164,7 @@ public class PerfilAmigoActivity extends AppCompatActivity {
                 List<String> urlFotos = new ArrayList<>();
                 for(DataSnapshot ds : dataSnapshot.getChildren()){
                     Postagem postagem = ds.getValue(Postagem.class);
+                    listaPostagens.add(postagem);
                     urlFotos.add(postagem.getCaminhoFoto());
                 }
 
@@ -214,7 +231,9 @@ public class PerfilAmigoActivity extends AppCompatActivity {
     }
 
     private void verificaSegueUsuarioAmigo(){
-        DatabaseReference seguidorRef = seguidoresRef.child(idUsuarioLogado).child(usuarioPerfil.getId());
+        DatabaseReference seguidorRef = seguidoresRef
+                .child(usuarioPerfil.getId())
+                .child(idUsuarioLogado);
         seguidorRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -254,14 +273,13 @@ public class PerfilAmigoActivity extends AppCompatActivity {
     }
 
     private void salvarSeguidor(Usuario uLogado, Usuario uAmigo){
-        HashMap<String, Object> dadosAmigo = new HashMap<>();
-        dadosAmigo.put("nome", uAmigo.getNome());
-        dadosAmigo.put("foto", uAmigo.getFoto());
-
+        HashMap<String, Object> dadosLogado = new HashMap<>();
+        dadosLogado.put("nome", uLogado.getNome());
+        dadosLogado.put("foto", uLogado.getFoto());
         DatabaseReference seguidorRef = seguidoresRef
-                .child(uLogado.getId())
-                .child(uAmigo.getId());
-        seguidorRef.setValue(dadosAmigo);
+                .child(uAmigo.getId())
+                .child(uLogado.getId());
+        seguidorRef.setValue(dadosLogado);
 
         //Alterar bota ocao para seguindo
         btnSeguir.setText("Seguindo");

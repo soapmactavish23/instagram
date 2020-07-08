@@ -85,6 +85,7 @@ public class UsuarioFirebase {
         Usuario usuario = new Usuario();
         usuario.setEmail(firebaseUser.getEmail());
         usuario.setNome(firebaseUser.getDisplayName());
+        usuario.setId(Base64Custom.codificarBase64(usuario.getEmail()));
 
         if(firebaseUser.getPhotoUrl() == null){
             usuario.setFoto("");

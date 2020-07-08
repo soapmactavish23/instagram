@@ -54,7 +54,7 @@ public class Usuario implements Serializable {
         usuarioMap.put("id", getId());
         usuarioMap.put("foto", getFoto());
         usuarioMap.put("seguidores", getSeguidores());
-        usuarioMap.put("seguidores", getSeguidores());
+        usuarioMap.put("seguindo", getSeguindo());
         usuarioMap.put("postagens", getPostagens());
         return usuarioMap;
     }

@@ -92,6 +92,12 @@ public class EditarPerfilActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_fechar_preto);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return false;
+    }
+
     private void configuracaoFirebase(){
         //Recuperar dados do usuario
         usuarioLogado = UsuarioFirebase.getUsuarioLogado();
